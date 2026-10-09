@@ -22,6 +22,15 @@ brew install ghostchimera
 ghostchimera doctor
 ```
 
+> **Note:** GHOST-Chimera has no tagged release yet, so the formula's stable
+> `sha256` is still a placeholder and `brew install ghostchimera` will fail
+> checksum verification. Until `v0.4.0` is tagged and the checksum is filled
+> in, install from `main` instead:
+>
+> ```bash
+> brew install --HEAD ghostchimera
+> ```
+
 ## Per release
 
 1. Tag `vX.Y.Z` in GHOST-Chimera.
