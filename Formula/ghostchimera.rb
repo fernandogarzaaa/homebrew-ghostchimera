@@ -3,7 +3,7 @@
 # Upstream Homebrew core admission is out of scope; ship via a tap:
 #   brew tap fernandogarzaaa/ghostchimera
 #   brew install ghostchimera
-# See homebrew/README.tap.md for the 5-minute tap setup.
+# See README.md for the 5-minute tap setup.
 #
 # Maintainer release checklist:
 #   1. Tag vX.Y.Z on GitHub, note the tarball SHA256 below.
