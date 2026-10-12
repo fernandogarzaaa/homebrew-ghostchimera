@@ -22,14 +22,11 @@ brew install ghostchimera
 ghostchimera doctor
 ```
 
-> **Note:** GHOST-Chimera has no tagged release yet, so the formula's stable
-> `sha256` is still a placeholder and `brew install ghostchimera` will fail
-> checksum verification. Until `v0.4.0` is tagged and the checksum is filled
-> in, install from `main` instead:
->
-> ```bash
-> brew install --HEAD ghostchimera
-> ```
+> **Status:** the formula points at the `v0.4.0-beta` source tag of GHOST-Chimera
+> with its real SHA256 and installs the core runtime into a private virtualenv
+> (core Python dependencies are fetched from PyPI during install). It has not yet
+> been run through `brew audit` / `brew install` on macOS by CI, so treat it as
+> beta. `brew install --HEAD ghostchimera` tracks `main`.
 
 ## Per release
 
@@ -38,6 +35,8 @@ ghostchimera doctor
    (`shasum -a 256 vX.Y.Z.tar.gz` from the release page).
 3. `brew audit --new ghostchimera && brew test ghostchimera`, then push.
 
-Optional extras after install: `$(brew --prefix)/opt/...` venvs are isolated;
-add backends with the venv's pip, e.g.
-`.../libexec/bin/pip install "ghostchimera[desktop,mcp]"`.
+Optional extras are not installed by default (they can be very large: torch,
+CUDA, GUI and voice stacks). Add one into the formula's isolated venv, e.g.
+`$(brew --prefix)/opt/ghostchimera/libexec/bin/python -m pip install "ghostchimera[mcp] @ https://github.com/fernandogarzaaa/GHOST-Chimera/archive/refs/tags/v0.4.0-beta.tar.gz"`
+Install extras from the same tag, not plain `ghostchimera[mcp]`, which would pull
+the PyPI build over it (`brew info ghostchimera` shows the exact command).
