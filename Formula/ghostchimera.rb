@@ -6,27 +6,27 @@
 # See README.md for the tap setup.
 #
 # Maintainer release checklist:
-#   1. Tag vX.Y.Z on GitHub (a plain tag does not trigger the PyPI publish;
-#      only a published GitHub Release does).
-#   2. Update url + sha256 below (`curl -sL <url> | shasum -a 256`).
+#   1. Publish the GitHub Release (publish.yml uploads the sdist + wheel to PyPI).
+#   2. Point url at the PyPI sdist and update sha256
+#      (`curl -sL <url> | shasum -a 256`; PyPI also lists it under "Download files").
 #   3. `brew audit --new ghostchimera` and `brew test ghostchimera` before tap push.
 class Ghostchimera < Formula
   include Language::Python::Virtualenv
 
   desc "Background AI infrastructure: ambient intelligence runtime for AI agents"
   homepage "https://github.com/fernandogarzaaa/GHOST-Chimera"
-  url "https://github.com/fernandogarzaaa/GHOST-Chimera/archive/refs/tags/v0.4.0-beta.tar.gz"
-  sha256 "555a9760ebf26d7ef128b89b60e5342b63b5db4c2b1b66112990edf5dd9cee37"
+  url "https://files.pythonhosted.org/packages/ee/8a/c787c9526677b0a3ed10a31fc0b4e241c894050448e3b2fbdce15ea79dc5/ghostchimera-0.4.0b1.tar.gz"
+  sha256 "8f4151ee4cf521fcce73e9a6ffc988fa8f9ae63199b023cb0b5e96035be4a738"
   license "MIT"
   head "https://github.com/fernandogarzaaa/GHOST-Chimera.git", branch: "main"
 
   depends_on "python@3.12"
 
   def install
-    # Installs the tagged source tarball (not whatever is newest on PyPI).
-    # There are no `resource` blocks yet, so pip resolves the five small core
-    # runtime dependencies (certifi, croniter, cryptography, jsonschema,
-    # websockets) from PyPI during install.
+    # Installs the released sdist (v0.4.0-beta.1 = PyPI 0.4.0b1), not whatever
+    # is newest on PyPI. There are no `resource` blocks yet, so pip resolves the
+    # small core runtime dependencies (certifi, croniter, cryptography,
+    # jsonschema, websockets) from PyPI during install.
     venv = virtualenv_create(libexec, "python3.12", without_pip: false)
     system venv.root/"bin/python", "-m", "pip", "install", "--no-cache-dir", buildpath
     %w[ghostchimera ghost chimera-pilot].each do |cmd|
@@ -37,8 +37,9 @@ class Ghostchimera < Formula
   def caveats
     <<~EOS
       Only the core runtime is installed. Optional backends (desktop, mcp,
-      gateway, local, quantum, minimind, voice) are opt-in, e.g.:
-        #{opt_libexec}/bin/python -m pip install "ghostchimera[mcp] @ #{stable.url}"
+      gateway, local, quantum, minimind, voice) are opt-in; pin the same
+      version so pip does not replace the installed build, e.g.:
+        #{opt_libexec}/bin/python -m pip install "ghostchimera[mcp]==#{version}"
     EOS
   end
 
